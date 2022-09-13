@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">LocationAppSample</string>
+    <string name="measure">計測</string>
+    <string name="result">緯度：未計測\n経度：未計測</string>
+</resources>
