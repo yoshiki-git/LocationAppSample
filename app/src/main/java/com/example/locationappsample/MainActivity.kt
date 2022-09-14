@@ -2,6 +2,7 @@ package com.example.locationappsample
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.location.Location
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -11,6 +12,8 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.example.locationappsample.databinding.ActivityMainBinding
 import com.google.android.gms.common.GooglePlayServicesUtil.isGooglePlayServicesAvailable
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,6 +21,9 @@ class MainActivity : AppCompatActivity() {
     private val TAG ="MainActivity.kt"
 
     private lateinit var binding: ActivityMainBinding
+
+    //位置情報サービスクライアントを定義
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     private val permissions = arrayOf(
         android.Manifest.permission.ACCESS_FINE_LOCATION,
@@ -32,14 +38,27 @@ class MainActivity : AppCompatActivity() {
         //permissionチェック
         checkPermission(permissions,REQUEST_CODE)
 /*
-        if(isGooglePlayServicesAvailable(this)){
-            
-        }
+        //アプリがグーグルプレイ開発者サービスを入れてるかチェック
+        isGooglePlayServicesAvailable(this))
 
  */
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         binding.btnMeasure.setOnClickListener {
+        //アプリが最後に取得した位置情報を取得する
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    // Got last known location. In some rare situations this can be null.
+                    //緯度
+                    val latitude = location?.latitude
+                    //経度
+                    val longitude = location?.longitude
 
+                    Log.d(TAG,"緯度：$latitude")
+                    Log.d(TAG,"経度：$longitude")
+
+                    binding.tvLoc.setText("緯度:$latitude\n経度:$longitude")
+                }
         }
 
     }
